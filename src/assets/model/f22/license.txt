@@ -1,0 +1,11 @@
+Model Information:
+* title:	F22
+* source:	https://sketchfab.com/3d-models/f22-3f5682a7d46d4aa99d145d26258dee73
+* author:	asarpansar92 (https://sketchfab.com/asarpansar92)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "F22" (https://sketchfab.com/3d-models/f22-3f5682a7d46d4aa99d145d26258dee73) by asarpansar92 (https://sketchfab.com/asarpansar92) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
