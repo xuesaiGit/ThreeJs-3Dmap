@@ -13,6 +13,8 @@ import { gsap } from "gsap";
 
 import { Reflector } from "three/examples/jsm/objects/Reflector";
 
+import TWEEN from '@tweenjs/tween.js';
+
 function Map() {
     const [mapData, setmapData] = useState([
         {
@@ -140,11 +142,11 @@ function Map() {
         // 使用点材质创建星空效果
         const vertices = [];
 
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 10000; i++) {
             const vertex = new THREE.Vector3();
-            vertex.x = Math.floor(Math.random() * 61) - 30;
-            vertex.y = Math.floor(Math.random() * 50);
-            vertex.z = Math.floor(Math.random() * 61) - 30;
+            vertex.x = Math.floor(Math.random() * 201) - 30;
+            vertex.y = Math.floor(Math.random() * 200);
+            vertex.z = Math.floor(Math.random() * 201) - 30;
             vertices.push(vertex.x, vertex.y, vertex.z);
         }
         // 星空效果
@@ -230,7 +232,7 @@ function Map() {
             div.textContent = name;
             const label = new CSS2DObject(div);
             label.scale.set(0.01, 0.01, 0.01);
-            const [x, y] = offsetXY(point);
+            const [x, y] = offsetXY(point);//地图坐标系转换成空间坐标
             label.position.set(x, -y, depth + 0.2);
             return label;
         };
@@ -320,6 +322,12 @@ function Map() {
             // 给光柱添加数值
             lightPillar.add(tip);
 
+
+
+
+
+
+
             gsap.to(circleMesh.scale, {
                 duration: 1 + Math.random() * 0.5,
                 x: 2,
@@ -372,7 +380,7 @@ function Map() {
                 // const color = new THREE.Color(`hsl(${233},${Math.random() * 30 + 55}%,${Math.random() * 30 + 55}%)`).getHex();
                 const color = new THREE.Color("#02518d").getHex();
                 // const depth = Math.random() * 0.6 + 0.3;
-                const depth = 1;
+                const depth = 1;//定义地图高度
 
                 const label = createLabel(name, point, depth);
                 const icon = createIcon(center, depth, name); //创建图标
@@ -403,8 +411,18 @@ function Map() {
             1000
         );
         // camera.position.set(0, 1.5, 6);
-        camera.position.set(5, -10, 30);
-        camera.lookAt(0, 3, 0);
+        // camera.position.set(5, -22, 10);
+        // camera.lookAt(0, 3, 0);
+
+        camera.position.set(100, 160, 80);
+        camera.lookAt(0, 0, 0);
+
+        // 视觉效果：地球从小到大出现(透视投影相机远小近大投影规律)
+        new TWEEN.Tween(camera.position)
+            .to({ x: 5, y: -22, z: 18 }, 3000)
+            .start()
+            .easing(TWEEN.Easing.Sinusoidal.InOut)//进入和结束都设置缓动
+
 
         const labelRenderer = new CSS2DRenderer();
         labelRenderer.domElement.style.position = "absolute";
@@ -478,6 +496,7 @@ function Map() {
         controls.enablePan = false;
 
         const animate = () => {
+            TWEEN.update();//tween更新
             requestAnimationFrame(animate);
             controls.update();
             // 使用渲染器渲染相机看这个场景的内容渲染出来
@@ -485,6 +504,7 @@ function Map() {
             labelRenderer.render(scene, camera);
         };
         animate();
+
 
         // 监听屏幕大小改变的变化，设置渲染的尺寸
         window.addEventListener("resize", () => {
@@ -498,6 +518,7 @@ function Map() {
             renderer.setPixelRatio(window.devicePixelRatio);
             labelRenderer.setSize(window.innerWidth, window.innerHeight);
         });
+
 
         //获取地图边界
         const url = "https://geo.datav.aliyun.com/areas_v3/bound/370000_full.json";
@@ -531,7 +552,7 @@ function Map() {
                                 console.log(intersect);
                             }
                         }
-                    } else {
+                    } else {//点击空白区域地图板块恢复
                         // 匹配所有地图板块
                         for (let i = 0; i < map.children.length; i++) {
                             for (let j = 0; j < mapData.length; j++) {
@@ -541,6 +562,7 @@ function Map() {
                             }
                         }
                     }
+                    //鼠标事件处理函数
                     function isAplha(intersect, zIndex) {
                         intersect.children.forEach((item) => {
                             if (item.type === "Mesh") {
